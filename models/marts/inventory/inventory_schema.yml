@@ -1,4 +1,3 @@
-# models/marts/inventory/inventory_schema.yml
 version: 2
 
 models:
@@ -10,9 +9,28 @@ models:
 
       signed_quantity is positive for sales and negative for
       returns and cancellations.
+
+    config:
+      materialized: incremental
+      incremental_strategy: merge
+      unique_key: transaction_line_id
+
+    semantic_model:
+      enabled: true
+      name: product_movements
+      label: Product Movements
+      description: >
+        Product movement semantic model for units sold, units returned,
+        net inventory movement, and movement counts.
+
+    agg_time_dimension: transaction_date
+
     columns:
       - name: transaction_line_id
         description: "Deterministic surrogate key for one invoice-product line."
+        entity:
+          type: primary
+          name: product_movement
         data_tests:
           - unique
           - not_null
@@ -20,21 +38,32 @@ models:
       - name: invoice_id
         description: >
           Invoice identifier. Not unique at line level.
+        entity:
+          type: foreign
+          name: invoice
         data_tests:
           - not_null
 
       - name: product_id
         description: "Product identifier."
+        entity:
+          type: foreign
+          name: product
         data_tests:
           - not_null
 
       - name: transaction_date
         description: "Business date of the movement."
+        granularity: day
+        dimension:
+          type: time
         data_tests:
           - not_null
 
       - name: transaction_type
         description: "Sale, return, cancellation, or unknown."
+        dimension:
+          type: categorical
         data_tests:
           - not_null
           - accepted_values:
@@ -44,7 +73,8 @@ models:
                 severity: warn
 
       - name: quantity
-        description: "Raw source quantity; may be negative for returns/cancellations."
+        description: >
+          Raw source quantity; may be negative for returns/cancellations.
         data_tests:
           - not_null
 
@@ -54,3 +84,53 @@ models:
           negative for returns and cancellations.
         data_tests:
           - not_null
+
+    metrics:
+      - name: units_sold
+        label: Units Sold
+        description: "Positive units moved by sales."
+        type: simple
+        agg: sum
+        expr: >
+          case
+            when transaction_type = 'sale'
+              then signed_quantity
+            else 0
+          end
+
+      - name: units_returned
+        label: Units Returned
+        description: >
+          Absolute units removed by returns and cancellations.
+          Returned as a positive number for easier dashboard display.
+        type: simple
+        agg: sum
+        expr: >
+          case
+            when transaction_type in ('return', 'cancellation')
+              then abs(signed_quantity)
+            else 0
+          end
+
+      - name: net_units_moved
+        label: Net Units Moved
+        description: >
+          Net inventory movement after returns and cancellations.
+          Positive for net sales; negative for net reversals.
+        type: simple
+        agg: sum
+        expr: signed_quantity
+
+      - name: product_movement_count
+        label: Product Movement Count
+        description: "Number of invoice-product-line movements."
+        type: simple
+        agg: count
+        expr: transaction_line_id
+
+      - name: distinct_products_moved
+        label: Distinct Products Moved
+        description: "Number of distinct products with at least one movement."
+        type: simple
+        agg: count_distinct
+        expr: product_id

@@ -1,0 +1,105 @@
+version: 2
+
+models:
+  - name: marts_customers
+    description: >
+      Customer dimension with lifetime transaction attributes.
+
+      Grain: one row per customer.
+
+      Customers with null CustomerID in the source are excluded
+      from this dimension because they cannot be attributed to a
+      known customer.
+
+    config:
+      materialized: table
+
+    semantic_model:
+      enabled: true
+      name: customers
+      label: Customers
+      description: >
+        Customer-level semantic model for customer counts,
+        lifetime value, and transaction-frequency metrics.
+
+    agg_time_dimension: last_transaction_date
+
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier."
+        entity:
+          type: primary
+          name: customer
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_transaction_date
+        description: "Date of the customer's earliest transaction."
+        granularity: day
+        dimension:
+          type: time
+        data_tests:
+          - not_null
+
+      - name: last_transaction_date
+        description: "Date of the customer's most recent transaction."
+        granularity: day
+        dimension:
+          type: time
+        data_tests:
+          - not_null
+
+      - name: lifetime_transaction_count
+        description: >
+          Count of distinct invoices associated with the customer.
+        data_tests:
+          - not_null
+
+      - name: lifetime_net_amount
+        description: >
+          Sum of signed_line_amount across the customer's transactions.
+          Positive when purchases exceed returns/cancellations.
+        data_tests:
+          - not_null
+
+    metrics:
+      - name: customer_count
+        label: Customer Count
+        description: "Number of known customers."
+        type: simple
+        agg: count
+        expr: customer_id
+
+      - name: total_customer_lifetime_value
+        label: Total Customer Lifetime Value
+        description: >
+          Total lifetime net amount across all customers.
+          Positive when purchases exceed returns and cancellations.
+        type: simple
+        agg: sum
+        expr: lifetime_net_amount
+
+      - name: average_customer_lifetime_value
+        label: Average Customer Lifetime Value
+        description: >
+          Average lifetime net amount per customer.
+        type: simple
+        agg: average
+        expr: lifetime_net_amount
+
+      - name: total_customer_transactions
+        label: Total Customer Transactions
+        description: >
+          Total number of distinct invoices across customers.
+        type: simple
+        agg: sum
+        expr: lifetime_transaction_count
+
+      - name: average_transactions_per_customer
+        label: Average Transactions per Customer
+        description: >
+          Average number of distinct invoices per customer.
+        type: simple
+        agg: average
+        expr: lifetime_transaction_count

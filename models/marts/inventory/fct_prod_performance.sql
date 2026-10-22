@@ -4,7 +4,7 @@
 
 with product_movement as (
     select *
-    from {{ ref('fct_product_movement') }}
+    from {{ ref('marts_inventory') }}
 ),
 
 product_metrics as (

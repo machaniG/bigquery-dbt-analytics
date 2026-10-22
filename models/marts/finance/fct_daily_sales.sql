@@ -49,7 +49,7 @@ select
     countif(transaction_type = 'cancellation') as cancellation_line_count,
     */
 
-    -- Distinct metrics: use deliberately, not by default
+    -- Distinct metrics
     count(distinct invoice_id) as invoice_count,
     count(distinct customer_id) as known_customer_count
 

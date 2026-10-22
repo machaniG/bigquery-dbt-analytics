@@ -4,7 +4,7 @@ version: 2
 models:
   - name: marts_finance
     description: >
-      Finance-grade transaction-line fact.
+      Finance-grade transaction-line fact for revenue KPI tracking
 
       Grain: one row per invoice-product-line occurrence.
 
@@ -12,43 +12,78 @@ models:
       - Sales have positive signed_line_amount.
       - Returns and cancellations have negative signed_line_amount.
       - Summing signed_line_amount produces net revenue.
+    
+    config:
+      materialized: incremental
+      incremental_strategy: merge
+      unique_key: transaction_line_id
+
+    semantic_model:
+      enabled: true
+      name: Revenue KPIs
+      label: Revenue Tacking
+      description: >
+        Total revenue tracking for Finance team including sales, returns and cancellations amounts.
+        Includes cols such as country, product_id, customer_id for optional aggregation and invidual tracking. 
+
+    agg_time_dimension: transaction_date
+
+      
     columns:
       - name: transaction_line_id
-        description: "Deterministic surrogate key for one invoice-product line."
+        description: "Deterministic surrogate key for one invoice-product line. unique identifier for one invoice-product line"
+        entity:
+          type: primary
+          name: transaction_line
         data_tests:
           - unique
           - not_null
 
       - name: invoice_id
         description: >
-          Invoice identifier from the source system.
+          Invoice to which the transaction line belongs.
           Not unique at line level because one invoice can contain
           multiple product lines.
+        entity:
+          type: foreign
+          name: invoice
         data_tests:
           - not_null
 
       - name: product_id
-        description: "Product identifier."
+        description: "Product identifier for products sold, cancelled or returned."
+        entity:
+          type: foreign
+          name: product
         data_tests:
           - not_null
 
       - name: transaction_date
         description: "Business date of the transaction."
+        granularity: day
+        dimension:
+          type: time 
         data_tests:
           - not_null
 
       - name: customer_id
         description: >
-          Customer identifier. May be null in the UCI dataset.
-        data_tests:
-          - not_null:
-              config:
-                severity: warn
+          Customer identifier. customer associated with the invoice. May be null in the dataset.
+        entity:
+          type: foreign
+          name: customer
+
+      - name: country
+        description: "Standardized customer country."
+        dimension:
+          type: categorical
 
       - name: transaction_type
         description: >
           Classification derived from source conventions:
           sale, return, cancellation, or unknown.
+        dimension:
+          type: categorical
         data_tests:
           - not_null
           - accepted_values:
@@ -59,14 +94,58 @@ models:
 
       - name: gross_line_amount
         description: >
-          Unsigned line value. Filter to sales for gross sales.
+          Recorded line value before applying return/cancellation direction. Filter to sales for gross sales.
+          It preserves the value exactly as calculated from the source fields. 
+          It does not yet decide whether the row should count positively or negatively in revenue.
         data_tests:
           - not_null
 
       - name: signed_line_amount
         description: >
+          Line value after applying negative sign for returns/cancellations. used for Net revenue, returns, cancellations
           Financial impact: positive for sales,
           negative for returns and cancellations.
           Summing this column yields net revenue.
         data_tests:
           - not_null
+
+    metrics:
+      - name: total_gross_revenue
+        label: Total Gross Revenue
+        description: "Sum of recorded transaction-line values."
+        type: simple
+        agg: sum
+        expr: gross_line_amount
+
+      - name: total_net_revenue
+        label: Total Net Revenue
+        description: "Sum of signed transaction-line values; revenue after returns and cancellations."
+        type: simple
+        agg: sum
+        expr: signed_line_amount
+
+      - name: total_returns_and_cancellations
+        label: Returns and Cancellations
+        description: "Negative value of returned or cancelled transaction lines."
+        type: simple
+        agg: sum
+        expr: >
+          case
+            when transaction_type in ('return', 'cancellation')
+              then signed_line_amount
+            else 0
+          end
+
+      - name: transaction_count
+        label: Transaction Count
+        description: "Number of distinct invoices."
+        type: simple
+        agg: count_distinct
+        expr: invoice_id
+
+      - name: transaction_line_count
+        label: Transaction Line Count
+        description: "Number of transaction lines."
+        type: simple
+        agg: count
+        expr: transaction_line_id
