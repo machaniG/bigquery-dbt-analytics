@@ -20,11 +20,7 @@ models:
 
     semantic_model:
       enabled: true
-      name: Revenue KPIs
-      label: Revenue Tacking
-      description: >
-        Total revenue tracking for Finance team including sales, returns and cancellations amounts.
-        Includes cols such as country, product_id, customer_id for optional aggregation and invidual tracking. 
+      name: Revenue_KPIs_semantic_layer
 
     agg_time_dimension: transaction_date
 
