@@ -20,14 +20,13 @@ models:
 
       - name: transaction_type
         description: holds information wheter a transaction is a sale, return, or a cancellation. 
-        tests: 
+        data_tests:
           - not_null
-          - data_tests:
-            - accepted_values:
-                arguments:
-                  values: ['sale', 'return', 'cancellation', 'unknown']
-                  config:
-                  severity: warn
+          - accepted_values:
+              arguments:
+                values: ['sale', 'return', 'cancellation', 'unknown']
+                config:
+                severity: warn
 
       - name: signed_line_amount
         tests:
