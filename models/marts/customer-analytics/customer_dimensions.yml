@@ -10,17 +10,15 @@ models:
       Customers with null CustomerID in the source are excluded
       from this dimension because they cannot be attributed to a
       known customer.
+      Includes Customer-level semantic model for customer counts,
+        lifetime value, and transaction-frequency metrics.
 
     config:
       materialized: table
 
     semantic_model:
       enabled: true
-      name: customers
-      label: Customers
-      description: >
-        Customer-level semantic model for customer counts,
-        lifetime value, and transaction-frequency metrics.
+      name: customers_semantic_model
 
     agg_time_dimension: last_transaction_date
 
