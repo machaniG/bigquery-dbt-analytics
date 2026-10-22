@@ -9,6 +9,8 @@ models:
 
       signed_quantity is positive for sales and negative for
       returns and cancellations.
+      Includes product movement semantic model for units sold, units returned,
+        net inventory movement, and movement counts.
 
     config:
       materialized: incremental
@@ -17,12 +19,7 @@ models:
 
     semantic_model:
       enabled: true
-      name: product_movements
-      label: Product Movements
-      description: >
-        Product movement semantic model for units sold, units returned,
-        net inventory movement, and movement counts.
-
+      name: product_movements_semantic_model
     agg_time_dimension: transaction_date
 
     columns:
