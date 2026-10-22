@@ -1,0 +1,33 @@
+# models/marts/inventory/dim_products.yml
+# Product dimension
+
+version: 2
+
+models:
+  - name: dim_products
+    description: >
+      Product dimension built from transaction-line data.
+
+      Grain: one row per product_id.
+    columns:
+      - name: product_id
+        description: "Unique product identifier."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: product_description
+        description: >
+          Most recent non-null product description observed in transactions.
+          The UCI source may contain inconsistent descriptions for the
+          same product code.
+
+      - name: first_transaction_date
+        description: "Earliest date the product appeared in a transaction."
+        data_tests:
+          - not_null
+
+      - name: last_transaction_date
+        description: "Latest date the product appeared in a transaction."
+        data_tests:
+          - not_null

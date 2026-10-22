@@ -1,0 +1,72 @@
+# models/semantic_layer/finance_semantics.yml
+# attached to fct_daily_sales
+# This creates four governed Finance KPIs: gross_sales, returns_and_cancellations, net_revenue, and net_units_moved. 
+# The current spec defines simple metrics directly in the model YAML and uses column-level entity/dimension annotations.
+version: 2
+
+models:
+  - name: fct_daily_sales
+    description: >
+      Daily sales performance by transaction date and country.
+      One row per transaction_date and country.
+    config:
+      semantic_model:
+        enabled: true
+        name: daily_sales
+        label: Daily Sales
+        description: >
+          Daily Finance performance metrics including gross sales,
+          returns and cancellations, net revenue, and net units moved.
+        default_agg_time_dimension: transaction_date
+
+    columns:
+      - name: transaction_date
+        description: "Business date of the transactions."
+        granularity: day
+        dimension:
+          type: time
+
+      - name: country
+        description: "Standardized customer country."
+        dimension:
+          type: categorical
+
+      - name: gross_sales
+        description: "Gross sales before returns and cancellations."
+        metrics:
+          - name: gross_sales
+            description: "Gross sales before returns and cancellations."
+            label: Gross Sales
+            type: simple
+            agg: sum
+
+      - name: returns_and_cancellations
+        description: >
+          Financial impact of returns and cancellations.
+          Expected to be zero or negative.
+        metrics:
+          - name: returns_and_cancellations
+            description: "Returns and cancellations; expected to be zero or negative."
+            label: Returns and Cancellations
+            type: simple
+            agg: sum
+
+      - name: net_revenue
+        description: >
+          Revenue after returns and cancellations.
+        metrics:
+          - name: net_revenue
+            description: "Net revenue after returns and cancellations."
+            label: Net Revenue
+            type: simple
+            agg: sum
+
+      - name: net_units_moved
+        description: >
+          Net units sold after returns and cancellations.
+        metrics:
+          - name: net_units_moved
+            description: "Net units moved after returns and cancellations."
+            label: Net Units Moved
+            type: simple
+            agg: sum

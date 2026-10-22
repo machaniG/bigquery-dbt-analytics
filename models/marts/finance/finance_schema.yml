@@ -1,0 +1,72 @@
+# models/marts/finance/finance_schema.yml
+version: 2
+
+models:
+  - name: marts_finance
+    description: >
+      Finance-grade transaction-line fact.
+
+      Grain: one row per invoice-product-line occurrence.
+
+      Financial convention:
+      - Sales have positive signed_line_amount.
+      - Returns and cancellations have negative signed_line_amount.
+      - Summing signed_line_amount produces net revenue.
+    columns:
+      - name: transaction_line_id
+        description: "Deterministic surrogate key for one invoice-product line."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: invoice_id
+        description: >
+          Invoice identifier from the source system.
+          Not unique at line level because one invoice can contain
+          multiple product lines.
+        data_tests:
+          - not_null
+
+      - name: product_id
+        description: "Product identifier."
+        data_tests:
+          - not_null
+
+      - name: transaction_date
+        description: "Business date of the transaction."
+        data_tests:
+          - not_null
+
+      - name: customer_id
+        description: >
+          Customer identifier. May be null in the UCI dataset.
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+
+      - name: transaction_type
+        description: >
+          Classification derived from source conventions:
+          sale, return, cancellation, or unknown.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['sale', 'return', 'cancellation', 'unknown']
+              config:
+                severity: warn
+
+      - name: gross_line_amount
+        description: >
+          Unsigned line value. Filter to sales for gross sales.
+        data_tests:
+          - not_null
+
+      - name: signed_line_amount
+        description: >
+          Financial impact: positive for sales,
+          negative for returns and cancellations.
+          Summing this column yields net revenue.
+        data_tests:
+          - not_null

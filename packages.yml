@@ -1,0 +1,11 @@
+# use dbt utils to generate surrogate keys. 
+# to run it: dbt deps
+# dbt will create dbt_packages/dbt_utils/
+# then call its macros anywhere in my models as: 
+# {{ dbt_utils.generate_surrogate_key(
+#     ['invoice_id', 'product_id', 'line_occurrence']
+# ) }} as transaction_line_id 
+
+packages:
+  - package: dbt-labs/dbt_utils
+    version: [">=1.0.0", "<2.0.0"]

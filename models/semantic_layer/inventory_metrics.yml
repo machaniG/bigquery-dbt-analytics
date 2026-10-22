@@ -1,0 +1,21 @@
+# models/semantic_layer/inventory_metrics.yml
+# returned_units and gross_units_sold as simple metrics, return rate defined as a ratio
+# dbt ratio metrics require a numerator and denominator metric; 
+#the engine computes the numerator and denominator values and then divides them.
+version: 2
+
+metrics:
+  - name: product_return_rate
+    description: >
+      Overall product return rate.
+
+      Calculation:
+      sum(returned_units) / sum(gross_units_sold).
+
+      This is an aggregate-level ratio, not an average of
+      product-level return rates.
+    label: Product Return Rate
+    type: ratio
+    type_params:
+      numerator: returned_units
+      denominator: gross_units_sold

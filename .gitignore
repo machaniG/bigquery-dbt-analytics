@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# dbt artifacts and logs
+target/
+logs/
+dbt_packages/
+
+# Environment/secrets
+.env
+*.env
+service-account*.json
+credentials*.json
+
+# OS/editor
+.DS_Store

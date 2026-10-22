@@ -1,0 +1,19 @@
+# models/semantic_layer/finance_metrics.yml
+# Advanced Finance metrics
+# A separate metrics file for calculations that combine metrics or require a ratio.
+# A ratio metric takes a numerator metric and denominator metric; dbt aggregates each side before dividing.
+version: 2
+
+metrics:
+  - name: return_and_cancellation_rate
+    description: >
+      Absolute value of returns and cancellations divided by gross sales.
+      A higher value means a larger share of sold value was reversed.
+    label: Return and Cancellation Rate
+    type: ratio
+    type_params:
+      numerator:
+        name: returns_and_cancellations
+        filter: "{{ Metric('returns_and_cancellations') }} < 0"
+        alias: absolute_returns_and_cancellations
+      denominator: gross_sales

@@ -1,0 +1,48 @@
+# dbt_project.yml
+# defines the project name, connection profile, resource paths, and default model configurations. 
+# Folder-level materializations can be overridden inside individual model SQL files.
+
+name: online_retail
+version: "1.0.0"
+config-version: 2
+
+# Must match the top-level key in profiles.yml.
+profile: online_retail
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  online_retail:
+    +materialized: view
+
+    staging:
+      +materialized: view
+      +schema: staging
+
+# intermediate models default to view: every intermediate model should not be made incremental automatically. 
+# Kept existing materialized='incremental', unique_key, and strategy configuration in the specific model that needs it
+# model-level configuration overrides the folder default.
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+
+    marts:
+      +materialized: table
+
+      finance:
+        +schema: finance
+
+      inventory:
+        +schema: inventory
+
+      customer_analytics:
+        +schema: customer_analytics

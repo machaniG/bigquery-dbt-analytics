@@ -1,0 +1,43 @@
+# models/marts/customer_analytics/customer_schema.yml
+# customer analytics dimensions
+version: 2
+
+models:
+  - name: marts_customers
+    description: >
+      Customer dimension with lifetime transaction attributes.
+
+      Grain: one row per customer.
+
+      Customers with null CustomerID in the source are excluded
+      from this dimension because they cannot be attributed to a
+      known customer.
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_transaction_date
+        description: "Date of the customer's earliest transaction."
+        data_tests:
+          - not_null
+
+      - name: last_transaction_date
+        description: "Date of the customer's most recent transaction."
+        data_tests:
+          - not_null
+
+      - name: lifetime_transaction_count
+        description: >
+          Count of distinct invoices associated with the customer.
+        data_tests:
+          - not_null
+
+      - name: lifetime_net_amount
+        description: >
+          Sum of signed_line_amount across the customer's transactions.
+          Positive when purchases exceed returns/cancellations.
+        data_tests:
+          - not_null

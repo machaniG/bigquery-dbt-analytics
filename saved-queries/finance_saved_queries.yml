@@ -1,0 +1,21 @@
+# models/semantic_layer/finance_saved_queries.yml
+# Saved queries package metrics, dimensions, and filters for a specific team or dashboard.
+# Saved queries define reusable metric/dimension combinations; 
+# MetricFlow uses them to construct consistent queries for downstream tools.
+version: 2
+
+saved_queries:
+  - name: daily_net_revenue_by_country
+    description: >
+      Daily net revenue and net units moved by country
+      for the Finance daily sales dashboard.
+    label: Daily Net Revenue by Country
+    query_params:
+      metrics:
+        - net_revenue
+        - net_units_moved
+        - gross_sales
+        - returns_and_cancellations
+      group_by:
+        - "TimeDimension('transaction_date', 'day')"
+        - "Dimension('country')"

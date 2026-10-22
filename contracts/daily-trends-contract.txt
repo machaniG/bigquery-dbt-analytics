@@ -1,0 +1,29 @@
+Dashboard: Daily Sales Tracking
+Owner: Finance
+Main question: How are sales, returns, and net revenue trending by day and country?
+
+Required filters:
+- Date
+- Country
+- Transaction type (optional)
+
+Required metrics:
+- Gross sales
+- Returns and cancellations
+- Net revenue
+- Net units moved
+
+Required dimensions:
+- transaction_date
+- country
+
+Daily sales-tracking mart
+
+| Column                    | Why Finance needs it          |
+| ------------------------- | ----------------------------- |
+| transaction_date          | Time trend                    |
+| country                   | Geographic filter/breakdown   |
+| gross_sales               | Top-line sales before returns |
+| returns_and_cancellations | Size of reversals             |
+| net_revenue               | Revenue kept after reversals  |
+| net_units_moved           | Volume trend after reversals  |

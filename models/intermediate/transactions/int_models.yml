@@ -1,0 +1,36 @@
+# models/intermediate/transactions/int_transaction_lines_enriched.yml
+version: 2
+
+models:
+  - name: int_transformations
+    description: >
+      Transaction lines with business-rule-based signs.
+      Sales are positive; refunds are negative.
+    columns:
+      - name: transaction_line_id
+        description: >
+         surrogate unique key created by dbt utils to be used for incremental loading since the data lacks unique key
+        tests:
+          - unique
+          - not_null
+
+      - name: transaction_date
+        tests:
+          - not_null
+
+      - name: transaction_type
+        description: holds information wheter a transaction is a sale, return, or a cancellation. 
+        tests: 
+          - not_null
+          - accepted values:
+            values: ['sale', 'return', 'cancellation', 'unknown']
+            config:
+              severity: warn
+
+      - name: signed_line_amount
+        tests:
+          - not_null
+
+      - name: signed_quantity
+        tests:
+          - not_null 

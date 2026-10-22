@@ -1,0 +1,56 @@
+# models/marts/inventory/inventory_schema.yml
+version: 2
+
+models:
+  - name: marts_inventory
+    description: >
+      Product movement fact for inventory analytics.
+
+      Grain: one row per invoice-product-line occurrence.
+
+      signed_quantity is positive for sales and negative for
+      returns and cancellations.
+    columns:
+      - name: transaction_line_id
+        description: "Deterministic surrogate key for one invoice-product line."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: invoice_id
+        description: >
+          Invoice identifier. Not unique at line level.
+        data_tests:
+          - not_null
+
+      - name: product_id
+        description: "Product identifier."
+        data_tests:
+          - not_null
+
+      - name: transaction_date
+        description: "Business date of the movement."
+        data_tests:
+          - not_null
+
+      - name: transaction_type
+        description: "Sale, return, cancellation, or unknown."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['sale', 'return', 'cancellation', 'unknown']
+              config:
+                severity: warn
+
+      - name: quantity
+        description: "Raw source quantity; may be negative for returns/cancellations."
+        data_tests:
+          - not_null
+
+      - name: signed_quantity
+        description: >
+          Net inventory impact: positive for sales,
+          negative for returns and cancellations.
+        data_tests:
+          - not_null
