@@ -109,10 +109,11 @@ models:
             else 0
           end
 
-      - name: net_units_moved
-        label: Net Units Moved
+      - name: product_net_units_moved
+        label: Product Net Units Sold
         description: >
-          Net inventory movement after returns and cancellations.
+          Net inventory movement after returns and cancellations,
+          aggregated by product.
           Positive for net sales; negative for net reversals.
         type: simple
         agg: sum
