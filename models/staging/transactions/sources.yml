@@ -29,7 +29,7 @@ sources:
               period: hour
 
         columns:
-          - name: invoice_id
+          - name: invoice
             description: invoice no of the e-commerce order
             data_tests:
               - not_null
