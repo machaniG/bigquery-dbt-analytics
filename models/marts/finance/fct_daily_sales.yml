@@ -1,3 +1,5 @@
+#models/marts/finance/fct_daily_sales.yml
+# for daily inventory tracking dashboard
 version: 2
 
 models:
@@ -5,8 +7,8 @@ models:
     description: >
       Daily sales performance by transaction date and country.
       One row per transaction_date and country.
-      semantic layer defines daily finance performance metrics including gross sales,
-        returns and cancellations, net revenue, and net units moved.
+      Semantic layer defines daily finance performance metrics including gross sales,
+      returns and cancellations, net revenue, and net units moved.
 
     config:
       materialized: table
@@ -43,7 +45,7 @@ models:
       - name: net_units_moved
         description: >
           Net units sold after returns and cancellations.
-          Net quantity movement per day and country
+          Net quantity movement per day and country.
 
     metrics:
       - name: gross_sales
@@ -60,6 +62,14 @@ models:
         agg: sum
         expr: returns_and_cancellations
 
+      - name: absolute_returns_and_cancellations
+        description: >
+          Absolute financial value of returns and cancellations.
+          Useful as the numerator for the return and cancellation rate.
+        label: Absolute Returns and Cancellations
+        type: derived
+        expr: "abs(returns_and_cancellations)"
+
       - name: net_revenue
         description: "Net revenue after returns and cancellations."
         label: Net Revenue
@@ -68,8 +78,9 @@ models:
         expr: net_revenue
 
       - name: daily_net_units_moved
-        description: "Net units sold after returns and cancellations 
-          aggregated by transaction date and country."
+        description: >
+          Net units sold after returns and cancellations,
+          aggregated by transaction date and country.
         label: Daily Net Units Moved
         type: simple
         agg: sum
@@ -82,8 +93,7 @@ models:
         label: Return and Cancellation Rate
         type: ratio
         numerator:
-          name: returns_and_cancellations
-          filter: "{{ Metric('returns_and_cancellations') }} < 0"
+          name: absolute_returns_and_cancellations
           alias: absolute_returns_and_cancellations
         denominator:
           name: gross_sales
