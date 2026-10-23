@@ -45,4 +45,4 @@ models:
         +schema: inventory
 
       customer_analytics:
-        +schema: customer_analytics
+        +schema: customer-analytics
