@@ -1,4 +1,5 @@
 # models/staging/transaction_events/sources.yml
+
 version: 2
 
 sources:
@@ -8,20 +9,27 @@ sources:
       Files are stored as Parquet in cloud storage and exposed as a
       queryable warehouse/lakehouse table.
     database: project-f5f18574-c0c4-44e2-b60 # this is the actual bigquery/gcp project id
-    schema: raw_transactions # this is the actual bigquery dataset id/name
+    schema: dbt_analytics26 # this is the actual bigquery dataset id/name
 
     tables:
       - name: transaction_data
-        identifier: raw_transactions # this is the actual name of the table in bigquery
+        identifier: online-retail # this should be the actual name of the table in bigquery
         description: >
-          Physical table registered from the raw_transactions Parquet files in GCS or S3 bucket.
+          Physical table registered from the raw_transactions Parquet files in GCS or S3 bucket. 
           Grain: one row per invoice-product-line occurrence.
-        loaded_at_field: ingested_at
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+
+        config:
+          loaded_at_field: ingested_at
+          freshness:
+            warn_after:
+              count: 24
+              period: hour
+            error_after:
+              count: 48
+              period: hour
+
         columns:
           - name: invoice_id
             description: invoice no of the e-commerce order
-            tests:
+            data_tests:
               - not_null

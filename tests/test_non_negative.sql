@@ -5,6 +5,6 @@ select
     transaction_line_id,
     transaction_type,
     signed_line_amount
-from {{ ref('int_transaction_lines') }}
+from {{ ref('int_transformations') }}
 where transaction_type = 'sale'
   and signed_line_amount < 0

@@ -5,17 +5,15 @@ models:
     description: >
       Daily sales performance by transaction date and country.
       One row per transaction_date and country.
+      semantic layer defines daily finance performance metrics including gross sales,
+        returns and cancellations, net revenue, and net units moved.
 
     config:
       materialized: table
 
     semantic_model:
       enabled: true
-      name: daily_sales
-      label: Daily Sales
-      description: >
-        Daily Finance performance metrics including gross sales,
-        returns and cancellations, net revenue, and net units moved.
+      name: daily_sales_semantic_model
 
     agg_time_dimension: transaction_date
 

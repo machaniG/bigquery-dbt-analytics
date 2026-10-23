@@ -2,7 +2,7 @@
 version: 2
 
 models:
-  - name: fct_product_performance
+  - name: fct_prod_performance
     description: >
       Product-level performance mart.
 
