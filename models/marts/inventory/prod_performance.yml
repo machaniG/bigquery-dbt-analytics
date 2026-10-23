@@ -47,6 +47,7 @@ models:
       - name: net_units_moved
         description: >
           Net units moved after returns and cancellations.
+          Net quantity movement per product
         data_tests:
           - not_null
 

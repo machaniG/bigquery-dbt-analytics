@@ -43,7 +43,9 @@ models:
         description: "Revenue after returns and cancellations."
 
       - name: net_units_moved
-        description: "Net units sold after returns and cancellations."
+        description: >
+          Net units sold after returns and cancellations.
+          Net quantity movement per day and country
 
     metrics:
       - name: gross_sales
@@ -67,9 +69,10 @@ models:
         agg: sum
         expr: net_revenue
 
-      - name: net_units_moved
-        description: "Net units sold after returns and cancellations."
-        label: Net Units Moved
+      - name: daily_net_units_moved
+        description: "Net units sold after returns and cancellations 
+          aggregated by transaction date and country."
+        label: Daily Net Units Moved
         type: simple
         agg: sum
         expr: net_units_moved
