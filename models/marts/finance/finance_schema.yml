@@ -121,7 +121,7 @@ models:
         expr: signed_line_amount
 
       - name: total_returns_and_cancellations
-        label: Returns and Cancellations
+        label: Total Returns and Cancellations
         description: "Negative value of returned or cancelled transaction lines."
         type: simple
         agg: sum

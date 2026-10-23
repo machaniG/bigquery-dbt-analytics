@@ -68,6 +68,9 @@ models:
           Useful as the numerator for the return and cancellation rate.
         label: Absolute Returns and Cancellations
         type: derived
+        type_params:
+          metrics:
+            - name: returns_and_cancellations
         expr: "abs(returns_and_cancellations)"
 
       - name: net_revenue
