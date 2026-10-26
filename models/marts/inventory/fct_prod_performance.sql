@@ -37,7 +37,15 @@ product_metrics as (
         ) as cancelled_units,
 
         -- sum net units sold from signed_quantity
-        sum(signed_quantity) as net_units_moved,
+        -- but exclude adjust transactions
+        sum(
+            case
+                when transaction_type in ('sale', 'return', 'cancellation')
+                    then signed_quantity
+                else 0
+            end
+        ) as net_units_moved,
+        --sum(signed_quantity) as net_units_moved,
 
         sum(
             case
