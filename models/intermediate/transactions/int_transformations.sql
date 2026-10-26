@@ -62,6 +62,8 @@ signed as (
         case
             when transaction_type in ('cancellation', 'return')
                 then -abs(quantity)
+            when transaction_type = 'adjustment'
+                then 0  -- Don't count accounting adjustments as physical unit movement
             else quantity
         end as signed_quantity
     from keyed
