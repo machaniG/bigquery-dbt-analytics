@@ -32,7 +32,7 @@ models:
 # Kept existing materialized='incremental', unique_key, and strategy configuration in the specific model that needs it
 # model-level configuration overrides the folder default.
     intermediate:
-      +materialized: view
+      +materialized: table #view changed from view to make dashboards
       +schema: intermediate
 
     marts:
