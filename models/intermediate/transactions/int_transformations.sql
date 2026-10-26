@@ -11,8 +11,8 @@ with transaction_lines as (
     from {{ ref('stg_raw_transactions') }}
 
     {% if is_incremental() %}
-    where date(ingested_at) >= (
-        select coalesce(max(date(ingested_at)), date '2010-01-01')
+    where ingested_at >= (
+        select coalesce(max(ingested_at), timestamp '2010-01-01')
         from {{ this }}
     )
     {% endif %}
