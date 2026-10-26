@@ -9,7 +9,7 @@ with source as (
 renamed as (
     select
         cast(invoice as string) as invoice_id,
-        cast(stockcode as string) as product_id,
+        cast(stock_code as string) as product_id,
         nullif(trim(description), '') as product_description,
         cast(quantity as int64) as quantity,
         timestamp(invoicedate) as transaction_at,
