@@ -31,8 +31,9 @@ classified as (
     select
         *,
         case
-            when upper(left(invoice_id, 1)) = 'C' AND (quantity >= 0 AND unit_price >= 0) then 'cancellation'
-            when quantity < 0 OR unit_price < 0 then 'return' 
+            when upper(left(invoice_id, 1)) = 'C' then 'cancellation'
+            when product_id in ('POST', 'M', 'DOT') then 'adjustment'
+            when quantity < 0 then 'return' 
             when quantity > 0 AND unit_price > 0 then 'sale'
             else 'unknown'
         end as transaction_type
