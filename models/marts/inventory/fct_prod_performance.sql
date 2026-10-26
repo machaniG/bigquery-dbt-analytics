@@ -12,7 +12,8 @@ product_metrics as (
         product_id,
 
         count(distinct invoice_id) as invoice_count,
-
+        
+        -- Gross sales units
         sum(
             case
                 when transaction_type = 'sale'
@@ -21,6 +22,7 @@ product_metrics as (
             end
         ) as gross_units_sold,
 
+        -- Returned units that represent physical returns
         sum(
             case
                 when transaction_type = 'return'
@@ -29,6 +31,12 @@ product_metrics as (
             end
         ) as returned_units,
 
+        -- include cancellations 
+        sum(
+            case when transaction_type = 'cancellation' then abs(quantity) else 0 end
+        ) as cancelled_units,
+
+        -- sum net units sold from signed_quantity
         sum(signed_quantity) as net_units_moved,
 
         sum(
@@ -44,6 +52,7 @@ product_metrics as (
         min(transaction_date) as first_transaction_date,
         max(transaction_date) as last_transaction_date
 
+
     from product_movement
     group by product_id
 )
@@ -53,6 +62,7 @@ select
     invoice_count,
     gross_units_sold,
     returned_units,
+    cancelled_units,
     net_units_moved,
     gross_sales,
     net_revenue,
