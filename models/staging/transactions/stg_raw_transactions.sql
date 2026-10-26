@@ -12,9 +12,9 @@ renamed as (
         cast(stock_code as string) as product_id,
         nullif(trim(description), '') as product_description,
         cast(quantity as int64) as quantity,
-        timestamp(invoicedate) as transaction_at,
-        cast(price as numeric) as unit_price,
-        cast(customerid as string) as customer_id,
+        timestamp(invoice_date) as transaction_at,
+        cast(unit_price as numeric) as unit_price,
+        cast(customer_id as string) as customer_id,
         initcap(trim(country)) as country,
 
         -- ingestion metadata added by the daily loader
