@@ -19,7 +19,7 @@ renamed as (
 
         -- ingestion metadata added by the daily loader
         ingested_at,
-        ingest_date
+        date(ingested_at, 'Europe/Berlin') as ingest_date
 
     from source
 ),
