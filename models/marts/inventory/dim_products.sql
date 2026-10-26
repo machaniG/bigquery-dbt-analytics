@@ -2,7 +2,10 @@
 -- product dimension. descriptive and does not contain performance metrics that change with reporting period
 
 with product_movement as (
-    select *
+    select 
+        product_id,
+        product_description,
+        transaction_date
     from {{ ref('marts_inventory') }}
 ),
 
@@ -11,7 +14,7 @@ product_attributes as (
         product_id,
 
         -- Choose the most recent non-null description.
-        -- UCI descriptions can be inconsistent for the same StockCode.
+        -- descriptions can be inconsistent for the same StockCode.
         array_agg(
             product_description
             ignore nulls
