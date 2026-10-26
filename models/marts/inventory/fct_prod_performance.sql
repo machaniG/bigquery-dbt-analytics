@@ -62,6 +62,12 @@ select
     safe_divide(
         returned_units,
         gross_units_sold
+    ) as raw_return_rate,
+
+    -- Cap it at 1.0 (100%) just in case returns exceed recorded sales
+    least(
+        safe_devide(returned_units, gross_units_sold), 
+            1.0
     ) as return_rate,
 
     first_transaction_date,
