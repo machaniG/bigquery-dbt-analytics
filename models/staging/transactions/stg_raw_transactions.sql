@@ -1,5 +1,8 @@
 -- models/staging/transactions/stg_raw_transactions.sql
 -- prepares a clean version of the raw table
+-- test sales have positive signed-line-amount in int-model failed 
+-- investigated found reason to be because of rows with positive quantities but negative price
+-- updated classification logic to account for this 
 
 with source as (
     select *
@@ -29,8 +32,8 @@ classified as (
         *,
         case
             when upper(left(invoice_id, 1)) = 'C' then 'cancellation'
-            when quantity < 0 then 'return'
-            when quantity > 0 then 'sale'
+            when quantity < 0 unit_price < 0 then 'return' -- to catch adjustment rows with positive qty 
+            when quantity > 0 unit_price > 0 then 'sale'
             else 'unknown'
         end as transaction_type
     from renamed
