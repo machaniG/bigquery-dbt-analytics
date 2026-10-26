@@ -11,5 +11,7 @@ select
     transaction_type,
     quantity,
     signed_quantity,
-    signed_line_amount
+    gross_line_amount,
+    signed_line_amount,
+    product_description
 from {{ ref('int_transformations') }}
