@@ -32,7 +32,7 @@ classified as (
         *,
         case
             when upper(left(invoice_id, 1)) = 'C' then 'cancellation'
-            when product_id in ('A', 'POST', 'M', 'DOT') then 'adjustment'
+            when upper(left(invoice_id, 1)) = 'A' or stock_code in ('B', 'POST', 'M', 'DOT') then 'adjustment'
             when quantity < 0 then 'return' 
             when quantity > 0 AND unit_price > 0 then 'sale'
             else 'unknown'
