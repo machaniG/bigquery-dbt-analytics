@@ -1,6 +1,8 @@
 with transaction_lines as (
     select
         transaction_date,
+        invoice_id,
+        customer_id,
         country,
         transaction_type,
         gross_line_amount,
