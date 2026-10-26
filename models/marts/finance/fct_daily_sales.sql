@@ -1,6 +1,8 @@
 with transaction_lines as (
     select
         transaction_date,
+        invoice_id,
+        customer_id,
         country,
         transaction_type,
         gross_line_amount,
@@ -32,7 +34,16 @@ select
         end
     ) as returns_and_cancellations,
 
-    sum(signed_line_amount) as net_revenue,
+    -- sum(signed_line_amount) as net_revenue,
+    SUM(
+        CASE
+            WHEN transaction_type IN ('sale', 'return', 'cancellation')
+             THEN signed_line_amount
+            ELSE 0
+        END
+    ) AS net_revenue,
+
+
     sum(signed_quantity) as net_units_moved,
 
     -- Line-count metrics should the finance team want to look at the financial impact of returns

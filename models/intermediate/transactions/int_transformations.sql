@@ -11,8 +11,8 @@ with transaction_lines as (
     from {{ ref('stg_raw_transactions') }}
 
     {% if is_incremental() %}
-    where date(ingested_at) >= (
-        select coalesce(max(date(ingested_at)), date '2010-01-01')
+    where ingested_at >= (
+        select coalesce(max(ingested_at), timestamp '2010-01-01')
         from {{ this }}
     )
     {% endif %}
@@ -62,6 +62,8 @@ signed as (
         case
             when transaction_type in ('cancellation', 'return')
                 then -abs(quantity)
+            when transaction_type = 'adjustment'
+                then 0  -- Don't count accounting adjustments as physical unit movement
             else quantity
         end as signed_quantity
     from keyed

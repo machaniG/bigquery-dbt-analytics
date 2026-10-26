@@ -5,9 +5,10 @@ select
     product_id,
     gross_units_sold,
     returned_units,
+    cancelled_units,
     net_units_moved
 from {{ ref('fct_prod_performance') }}
 where abs(
     net_units_moved
-    - (gross_units_sold - returned_units)
+    - (gross_units_sold - returned_units - cancelled_units)
 ) > 0

@@ -1,4 +1,4 @@
--- tests/assert_return_rate_is_between_zero_and_one.sql
+-- tests/assert_return_rate_is_capped_at_one.sql
 select
     product_id,
     returned_units,
