@@ -32,8 +32,8 @@ classified as (
         *,
         case
             when upper(left(invoice_id, 1)) = 'C' then 'cancellation'
-            when quantity < 0 unit_price < 0 then 'return' -- to catch adjustment rows with positive qty 
-            when quantity > 0 unit_price > 0 then 'sale'
+            when quantity < 0 OR unit_price < 0 then 'return' 
+            when quantity > 0 AND unit_price > 0 then 'sale'
             else 'unknown'
         end as transaction_type
     from renamed
