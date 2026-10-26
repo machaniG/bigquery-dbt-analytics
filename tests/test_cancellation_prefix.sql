@@ -4,7 +4,7 @@
 -- should catch any row wrongly classified as cancellation yet it doesn't have a 'C' prefix in invoice
 select
     transaction_line_id,
-    transaction_id,
+    transaction_at,
     transaction_type
 from {{ ref('int_transformations') }}
 where transaction_type = 'cancellation'
