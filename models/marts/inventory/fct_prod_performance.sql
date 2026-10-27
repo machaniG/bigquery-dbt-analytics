@@ -10,7 +10,6 @@ with product_movement as (
 product_metrics as (
     select
         product_id,
-        transaction_date,
 
         count(distinct invoice_id) as invoice_count,
         
