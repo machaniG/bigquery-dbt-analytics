@@ -24,7 +24,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['sale', 'return', 'cancellation', 'unknown']
+                values: ['sale', 'return', 'cancellation', 'adjustment', 'unknown']
                 config:
                 severity: warn
 
