@@ -63,7 +63,7 @@ product_metrics as (
 
 
     from product_movement
-    group by product_id, transaction_date
+    group by product_id
 )
 
 select
@@ -75,7 +75,6 @@ select
     net_units_moved,
     gross_sales,
     net_revenue,
-    transaction_date,
 
     -- Return rate: returned units divided by gross units sold.
     -- Use safe division to avoid errors when a product has no sales.
