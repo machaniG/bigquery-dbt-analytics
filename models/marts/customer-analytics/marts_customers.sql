@@ -10,6 +10,7 @@ with transaction_lines as (
 customer_metrics as (
     select
         customer_id,
+        country,
         min(transaction_date) as first_transaction_date,
         max(transaction_date) as last_transaction_date,
         count(distinct invoice_id) as lifetime_transaction_count,
