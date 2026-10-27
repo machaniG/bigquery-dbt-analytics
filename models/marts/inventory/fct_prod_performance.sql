@@ -63,7 +63,7 @@ product_metrics as (
 
 
     from product_movement
-    group by product_id
+    group by product_id, transaction_date
 )
 
 select
