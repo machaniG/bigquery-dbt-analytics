@@ -24,13 +24,28 @@ Prepares fact grain by turning classified staging lines into a stable, finance- 
 | Handle duplicates deliberately | Keep exact duplicate lines only if they are genuine separate lines; otherwise deduplicate with a documented rule |
 | Join reference/enrichment data | Product attributes, customer attributes, country mapping, calendar |
 | Prepare reusable calculations | gross_line_amount, signed_line_amount, signed_quantity |
-| Isolate complex logic | So fct_transaction_lines remains simple and readable |
+| Isolate complex logic | So marts remains simple and readable |
+
+
+## Marts
+
+- Built 6 dbt marts that serve as the final, business-ready layer of data transformation.
+- The marts are materialized as physical tables or incremental models inside BigQuery cloud data warehouse.
+- They expose clean, curated, and entity-grained datasets directly to end users, BI dashboards, and reverse-ETL tools.
+
+
+# Semantic Layer 
+
+- Built 4 semantic models with 21 defined business metrics, establish the single source of truth for the business metrics and KPIs
 
 ----
 
+
 # Tests
 
-## 1. Test derived logic
+- Designed a total of 61 tests including generic/custom business-related tests e.g.,
+
+1. Test derived logic
 
 Testing the classification rule:
 
@@ -38,7 +53,7 @@ Testing the classification rule:
     - test_returns
     - test_cancellations
 
-## 2. Test sign conventions
+2. Test sign conventions
 
 The intermediate model promises:
 
@@ -50,7 +65,7 @@ The intermediate model promises:
     - test_non_negative
     - test_non_positive
 
-## 3. Custom business tests
+3. Custom business tests
 
 - Should return zero rows when valid.
 
@@ -59,5 +74,67 @@ The intermediate model promises:
     - test_sales_positive
     - test_returned_inventory
 
+----
+
+#  BI Dashboards for Stakeholders
+
+- The centralized business logic/metrics were used for reporting by finance, inventory, and customer analytics teams, ensuring that so every downstream report uses the exact same logic and preventing conflicting numbers across teams. 
 
 
+## Example Revenue Tracking Dashboard Enabled by my dbt Models for the Finance Team
+
+Created a revenue tracking dashboard in Data Studio (Looker Studio) so the finance team can track revenue in real time without writing a single line of code. 
+
+The dashboard below is filtered to the current year and is fully interactive to allow comparison over the years. Marts finance feeds this dashboard. Time and country allows for targeted revenue analysis / tracking by the finance team. 
+
+Revenue Tracking Dashboard before new batch arrival
+
+![Before new batch](assets/revenue1.png)
+
+Revenue Tracking Dashboard after the new batch arrival and scheduled dbt transformations
+
+![After new batch](assets/revenue-updated.png)
+
+----
+
+# Successful Scheduled Transformations
+
+What the logs confirm
+The build log shows these models running in the dbt_analytics26 target:
+
+| Model	| Materialization	| Result |
+| --- | --- | --- |
+| stg_raw_transactions |	View	| Succeeded |
+| int_transformations	| Incremental	| Succeeded |
+| marts_finance	| Incremental	| Succeeded |
+| marts_inventory	| Incremental |	Succeeded |
+| marts_customers	| Table	| Succeeded |
+| fct_daily_sales	| Table	| Succeeded |
+| fct_prod_performance	| Table	| Succeeded |
+|dim_products	| Table	| Succeeded |
+
+
+- The following results confirm that Batch 3 was incorporated into the production models
+
+- The row counts and date ranges are consistent across the intermediate model and both marts, and the daily sales fact table also contains dates through July 2011.
+
+Results 
+
+| Production model | Total rows	| Batch 1	| Batch 2	| Batch 3	| Latest date
+| ----| -----| -----| -----| -----| ------|
+| int_transformations |	788,359 |	365,825	| 242,448 |	180,086	| 2011-07-31 |
+| marts_finance	| 788,359 |	365,825	 | 242,448	| 180,086	| 2011-07-31 |
+| marts_inventory |	788,359	| 365,825	| 242,448	| 180,086	| 2011-07-31 |
+| fct_daily_sales	| 2,519	| 1,167	| 703	| 649	| 2011-07-31 |
+
+
+- which means:
+
+    1. The source update reached the intermediate model. It contains 180,086 rows dated March–July 2011, matching the increase observed in total records after uploading Batch 3.
+    2. Both marts contain the same batch coverage and row counts as the intermediate model. There is no sign of Batch 3 being excluded from these models.
+    3. The daily sales fact table includes Batch 3. Its 649 rows represent aggregated daily records, rather than individual transactions, so its count is expected to be much smaller.
+
+
+# Production Job Lineage Graph
+
+![Bigquery Daily Deployment Lineage Graph](assets/lineage-graph.png)
