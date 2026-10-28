@@ -1,18 +1,27 @@
-# Data-quality-observability
+# End-to-End Analytics Engineering Pipeline with dbt, BigQuery & Looker Studio
 
-## 
+## Overview
+
+- And end-to-end ELT pipeline with automated dbt data transformations after raw data is loaded into Bigquery cloud data warehouse for E-commerce B2B dataset, utilizing incremental modeling that transforms and inserts only new or modified data into a table during a run, rather than rebuilding the entire table from scratch. 
+
 - Marts contain the prepared data products.
 - Semantic models describe their entities, dimensions, and measures.
 - Metrics define the governed KPIs.
 - Saved queries package those KPIs for a team or dashboard.
 
-- **This gives Finance, Inventory, and Customer Analytics a shared, version-controlled definition of net_revenue, net_units_moved, product_return_rate, and customer_lifetime_value.**
+- **This gives Finance, Inventory, and Customer Analytics a shared, version-controlled definition of metrics such as net_revenue, net_units_moved, product_return_rate, and customer_lifetime_value.**
 
-## Staging
+## Analytic Pipeline
+
+Google Cloud Storage Data Lake (Raw batches) &#10145; Bigquery Data Warehouse (External Tables) &#10145; dbt transformations (8 models + 4 semantic models, 21 metrics, 61 data tests) &#10145; Looker Studio (Inventory, Finance, & Customer Analytics Dashboards and Reporting)
+
+## Dbt Model Layers
+
+### Staging
 
 Prepares a clean version of the raw table and derives transaction type.
 
-## Intermediate
+### Intermediate
 
 Prepares fact grain by turning classified staging lines into a stable, finance- and inventory-ready transaction-line grain.
 
@@ -27,21 +36,20 @@ Prepares fact grain by turning classified staging lines into a stable, finance- 
 | Isolate complex logic | So marts remains simple and readable |
 
 
-## Marts
+### Marts
 
 - Built 6 dbt marts that serve as the final, business-ready layer of data transformation.
 - The marts are materialized as physical tables or incremental models inside BigQuery cloud data warehouse.
 - They expose clean, curated, and entity-grained datasets directly to end users, BI dashboards, and reverse-ETL tools.
 
 
-# Semantic Layer 
+## Semantic Layer 
 
 - Built 4 semantic models with 21 defined business metrics, establish the single source of truth for the business metrics and KPIs
 
 ----
 
-
-# Tests
+## Data Quality and Observability
 
 - Designed a total of 61 tests including generic/custom business-related tests e.g.,
 
@@ -76,12 +84,12 @@ The intermediate model promises:
 
 ----
 
-#  BI Dashboards for Stakeholders
+##  BI Dashboards for Stakeholders
 
 - The centralized business logic/metrics were used for reporting by finance, inventory, and customer analytics teams, ensuring that so every downstream report uses the exact same logic and preventing conflicting numbers across teams. 
 
 
-## Example Revenue Tracking Dashboard Enabled by my dbt Models for the Finance Team
+### Example Revenue Tracking Dashboard Enabled by my dbt Models for the Finance Team
 
 Created a revenue tracking dashboard in Data Studio (Looker Studio) so the finance team can track revenue in real time without writing a single line of code. 
 
@@ -97,7 +105,7 @@ The dashboard below is filtered to the current year and is fully interactive to 
 
 ----
 
-# Successful Scheduled Transformations
+## Successful Scheduled Transformations
 
 What the logs confirm
 The build log shows these models running in the dbt_analytics26 target:
@@ -135,6 +143,10 @@ Results
     3. The daily sales fact table includes Batch 3. Its 649 rows represent aggregated daily records, rather than individual transactions, so its count is expected to be much smaller.
 
 
-# Production Job Lineage Graph
+## Production Job Lineage Graph
 
 ![Bigquery Daily Deployment Lineage Graph](assets/lineage-graph.png)
+
+
+
+
