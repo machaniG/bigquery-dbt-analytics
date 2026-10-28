@@ -87,11 +87,11 @@ Created a revenue tracking dashboard in Data Studio (Looker Studio) so the finan
 
 The dashboard below is filtered to the current year and is fully interactive to allow comparison over the years. Marts finance feeds this dashboard. Time and country allows for targeted revenue analysis / tracking by the finance team. 
 
-Revenue Tracking Dashboard before new batch arrival
+**Revenue Tracking Dashboard before new batch arrival**
 
 ![Before new batch](assets/revenue1.png)
 
-Revenue Tracking Dashboard after the new batch arrival and scheduled dbt transformations
+**Revenue Tracking Dashboard after the new batch arrival and scheduled dbt transformations**
 
 ![After new batch](assets/revenue-updated.png)
 
