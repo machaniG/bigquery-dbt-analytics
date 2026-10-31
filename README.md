@@ -11,6 +11,12 @@
 
 - **This gives Finance, Inventory, and Customer Analytics a shared, version-controlled definition of metrics such as net_revenue, net_units_moved, product_return_rate, and customer_lifetime_value.**
 
+## Production Job Lineage Graph
+
+![Bigquery Daily Deployment Lineage Graph](assets/lineage-graph.png)
+
+----
+
 ## Analytic Pipeline
 
 Google Cloud Storage Data Lake (Raw batches) &#10145; Bigquery Data Warehouse (External Tables) &#10145; dbt transformations (8 models + 4 semantic models, 21 metrics, 61 data tests) &#10145; Looker Studio (Inventory, Finance, & Customer Analytics Dashboards and Reporting)
@@ -143,9 +149,7 @@ Results
     3. The daily sales fact table includes Batch 3. Its 649 rows represent aggregated daily records, rather than individual transactions, so its count is expected to be much smaller.
 
 
-## Production Job Lineage Graph
 
-![Bigquery Daily Deployment Lineage Graph](assets/lineage-graph.png)
 
 
 
