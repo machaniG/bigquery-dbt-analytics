@@ -1,0 +1,12 @@
+# saved_queries/customer_saved_queries.yml
+version: 2
+
+saved_queries:
+  - name: customer_lifetime_value
+    description: "Customer lifetime value by customer."
+    label: Customer Lifetime Value
+    query_params:
+      metrics:
+        - customer_lifetime_value
+      group_by:
+        - "Entity('customer')"

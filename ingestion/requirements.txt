@@ -1,0 +1,17 @@
+# Keep NumPy below 2 to avoid binary-extension incompatibilities.
+numpy<2
+pandas>=2.0.3,<3
+pyarrow>=19,<24
+pandera>=0.26,<0.27
+pytest==7.4.2
+google-cloud-storage>=2.10,<4
+
+# python -m venv venv
+# pip install -r requirements.txt
+# cd /Users/gechemba/Documents/analytic-engineer/bigquery-dbt-analytics/ingestion
+
+# confirm which python exist and use it to create a virtual environment
+#gechemba@Mac ingestion % /opt/homebrew/bin/python3.13 --version
+#Python 3.13.9
+#gechemba@Mac ingestion % python3.13 -m venv ing-venv
+#gechemba@Mac ingestion % source ing-venv/bin/activate

@@ -1,0 +1,14 @@
+
+- **Movement fact:** event-level truth—what happened.
+- **Product dimension:** stable descriptive context—what the product is.
+- **Product performance mart:** product-level outcomes—how it performs and how often it is returned.
+
+## Return-rate definition 
+
+| Return-rate definition | Formula | Use case |
+| ---------------------- | --------| ----------- |
+| Unit return rate | returned_units / gross_units_sold | Inventory and merchandising |
+| Order return rate | distinct invoices with return / distinct invoices with sale | Customer behavior |
+| Value return rate | abs(return signed amount) / gross_sales | Finance |
+| Time-boxed return rate | Returns in period / sales from an earlier cohort window | More accurate for delayed returns |
+

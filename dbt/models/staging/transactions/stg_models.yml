@@ -1,0 +1,42 @@
+# models/staging/transactions/stg_raw_transactions.yml
+
+version: 2
+
+models:
+  - name: stg_raw_transactions # must match the SQL file name
+    description: >
+      Cleaned online retail transactions. Grain: one row per invoice-product-line occurrence.
+    columns:
+      - name: invoice_id
+        description: row id for the transaction records. not unique
+        tests:
+          - not_null
+
+      - name: transaction_at
+        description: timestamp when each transaction took place, normalized from epoch/ISO via the normalize_timestamp macro.. useful for time-based partitioning/ data filtering
+        tests:
+          - not_null
+
+     # - name: customer_id
+     #   description: unique identifier for the customer placing the order
+      #  tests:
+      #    - not_null
+
+      - name: product_id
+        description: the stock code of the products sold
+        tests:
+          - not_null
+
+      - name: unit_price
+        description: how much the buyer paid for each item.
+        tests:
+          - not_null
+
+      - name: quantity
+        description: the number of units a customer bought in each transaction.
+        tests:
+          - not_null
+
+     # - name: gross_order_amount
+      #  tests:
+      #    - not_null

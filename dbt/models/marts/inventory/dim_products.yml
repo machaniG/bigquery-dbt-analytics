@@ -1,0 +1,35 @@
+# models/marts/inventory/dim_products.yml
+# product dimension
+version: 2
+
+models:
+  - name: dim_products
+    description: >
+      Product dimension containing descriptive attributes.
+
+      Grain: one row per product_id.
+
+      This model describes products; it does not contain period-specific
+      performance metrics such as return rate or net revenue.
+    columns:
+      - name: product_id
+        description: "Unique product identifier from the source system."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: product_description
+        description: >
+          Most recent non-null product description observed in transactions.
+          The UCI source may contain inconsistent descriptions for the same
+          product code.
+
+      - name: first_seen_date
+        description: "Earliest transaction date in which the product appeared."
+        data_tests:
+          - not_null
+
+      - name: last_seen_date
+        description: "Latest transaction date in which the product appeared."
+        data_tests:
+          - not_null
