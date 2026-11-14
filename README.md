@@ -1,5 +1,20 @@
 # End-to-End Analytics Engineering Pipeline with dbt, BigQuery & Looker Studio
 
+
+## Problem
+
+Three different teams (inventory, finance, & customer analystics) depend on this dataset. However, each team calculates business metrics slightly differently per dashboard so stakeholders receive reports with conflicting numbers. 
+
+## My Solution
+
+To eliminate per dashboard level metrics calculation and differing data cleaning and preprocessing per team, I built and automated a medallion ELT pipeline that pulls raw files from Landing Zone in google cloud storage, converts them to parquet files and ingest them to a Bronze Zone (GCS bucket 2), links the data into Bigquery as external tables, processes the partitioned Parquet datasets in Bigquery using dbt transformations into incremental Silver models and writes the resulting Gold marts into Bigquery tables. I then connected the Gold marts to Looker Studio for BI and stakeholder reporting. 
+
+### Design
+
+## Results
+
+
+
 ## Overview
 
 - And end-to-end ELT pipeline with automated dbt data transformations after raw data is loaded into Bigquery cloud data warehouse for E-commerce B2B dataset, utilizing incremental modeling that transforms and inserts only new or modified data into a table during a run, rather than rebuilding the entire table from scratch. 
@@ -11,7 +26,7 @@
 
 - **This gives Finance, Inventory, and Customer Analytics a shared, version-controlled definition of metrics such as net_revenue, net_units_moved, product_return_rate, and customer_lifetime_value.**
 
-## Production Job Lineage Graph
+## Production Lineage Graph
 
 ![Bigquery Daily Deployment Lineage Graph](assets/lineage-graph.png)
 
