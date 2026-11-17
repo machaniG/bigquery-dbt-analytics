@@ -63,4 +63,4 @@ jobs:
           pip install --upgrade pip
           pip install google-cloud-bigquery google-genai pydantic pytest
       - name: Run Deterministic Faithfulness & Non-Response Tests
-        run: pytest -v
+        run: python -m pytest -v
