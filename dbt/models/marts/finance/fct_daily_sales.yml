@@ -12,40 +12,65 @@ models:
 
     config:
       materialized: table
+      # added contract: {enforced: true} with explicit data_type definitions. 
+      # this guarantees BigQuery will fail the build rather than silently break Looker Studio 
+      #or downstream AI models if a column type or name ever shifts
+      contract:
+        enforced: true #enforcing dbt model contracts 
 
+    # add elementary anomaly detection tests for the metrics
+    data_tests:
+      - elementary.volume_anomalies:
+          timestamp_column: transaction_date
+          time_bucket:
+            period: day
+            count: 1
+      - elementary.schema_changes
+
+    # add semantic model definition for BI tools and AI consumption. 
+    # this semantic model defines the metrics and dimensions for the fct_daily_sales model
     semantic_model:
       enabled: true
       name: daily_sales_semantic_model
-
+      
     agg_time_dimension: transaction_date
+
 
     columns:
       - name: transaction_date
         description: "Business date of the transactions."
         granularity: day
+        data_type: date
+        dimension:
+          type: time
         data_tests:
           - not_null
 
       - name: country
         description: "Standardized customer country."
+        data_type: string
         data_tests:
           - not_null
 
       - name: gross_sales
         description: "Gross sales before returns and cancellations."
+        data_type: numeric
 
       - name: returns_and_cancellations
         description: >
           Financial impact of returns and cancellations.
           Expected to be zero or negative.
+        data_type: numeric
 
       - name: net_revenue
         description: "Revenue after returns and cancellations."
+        data_type: numeric
 
       - name: net_units_moved
         description: >
           Net units sold after returns and cancellations.
           Net quantity movement per day and country.
+        data_type: integer
 
     metrics:
       - name: gross_sales

@@ -11,4 +11,4 @@ packages:
     version: [">=1.0.0", "<2.0.0"]
 
   - package: elementary-data/elementary
-    version: [">=0.5.0", "<1.0.0"]
+    version: 0.26.1

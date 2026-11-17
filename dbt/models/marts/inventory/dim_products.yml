@@ -8,12 +8,25 @@ models:
       Product dimension containing descriptive attributes.
 
       Grain: one row per product_id.
-
       This model describes products; it does not contain period-specific
       performance metrics such as return rate or net revenue.
+
+    config:
+      materialized: table
+      incremental_strategy: merge
+      unique_key: product_id
+
+      # added contract: {enforced: true} with explicit data_type definitions. 
+      #This guarantees BigQuery will fail the build rather than silently break Looker Studio 
+      #or downstream AI models if a column type or name ever shifts
+      contract:
+        enforced: true
+
+        
     columns:
       - name: product_id
         description: "Unique product identifier from the source system."
+        data_type: string
         data_tests:
           - unique
           - not_null
@@ -23,13 +36,16 @@ models:
           Most recent non-null product description observed in transactions.
           The UCI source may contain inconsistent descriptions for the same
           product code.
+        data_type: string
 
       - name: first_seen_date
         description: "Earliest transaction date in which the product appeared."
+        data_type: date
         data_tests:
           - not_null
 
       - name: last_seen_date
         description: "Latest transaction date in which the product appeared."
+        data_type: date
         data_tests:
           - not_null

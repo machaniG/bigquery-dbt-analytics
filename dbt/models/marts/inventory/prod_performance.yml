@@ -19,15 +19,40 @@ models:
       - net_units_moved equals gross units sold minus returned units,
         plus any other signed movements.
       - return_rate equals returned_units divided by gross_units_sold.
+
+    config:
+      materialized: table
+      incremental_strategy: merge
+      unique_key: product_id
+
+      # added contract: {enforced: true} with explicit data_type definitions. 
+      #This guarantees BigQuery will fail the build rather than silently break Looker Studio 
+      #or downstream AI models if a column type or name ever shifts
+      contract:
+        enforced: true
+
+     # Model-level Elementary Observability Tests
+        # elementary's automated anomaly detection: volume and freshness monitoring to catch silent pipeline failures 
+        # or unexpected changes in data volume, schema, or freshness. 
+    data_tests:
+      - elementary.volume_anomalies:
+          timestamp_column: transaction_date
+          time_bucket:
+            period: day
+            count: 1
+      - elementary.schema_changes
+
     columns:
       - name: product_id
         description: "Unique product identifier."
+        data_type: string
         data_tests:
           - unique
           - not_null
 
       - name: invoice_count
         description: "Number of distinct invoices containing this product."
+        data_type: integer
         data_tests:
           - not_null
 
@@ -35,12 +60,14 @@ models:
         description: >
           Total units sold in sale transactions.
           Does not subtract returns.
+        data_type: integer
         data_tests:
           - not_null
 
       - name: returned_units
         description: >
           Total units returned, stored as a positive count.
+        data_type: integer
         data_tests:
           - not_null
 
@@ -48,18 +75,21 @@ models:
         description: >
           Net units moved after returns and cancellations.
           Net quantity movement per product
+        data_type: integer
         data_tests:
           - not_null
 
       - name: gross_sales
         description: >
           Gross sales value before returns and cancellations.
+        data_type: numeric
         data_tests:
           - not_null
 
       - name: net_revenue
         description: >
           Net revenue after returns and cancellations.
+        data_type: numeric
         data_tests:
           - not_null
 
@@ -67,3 +97,6 @@ models:
         description: >
           Returned units divided by gross units sold.
           Null when the product has no recorded sales.
+        data_type: float
+        data_tests:
+          - not_null

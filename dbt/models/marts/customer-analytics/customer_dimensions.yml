@@ -26,12 +26,23 @@ models:
 
     agg_time_dimension: last_transaction_date
 
+
+    # Model-level Elementary Observability Tests 
+    data_tests:
+      - elementary.volume_anomalies:
+          timestamp_column: transaction_date
+          time_bucket:
+            period: day
+            count: 1
+      - elementary.schema_changes
+
     columns:
       - name: customer_id
         description: "Unique customer identifier."
         entity:
           type: primary
           name: customer
+        data_type: string
         data_tests:
           - unique
           - not_null
@@ -41,6 +52,7 @@ models:
         granularity: day
         dimension:
           type: time
+        data_type: date
         data_tests:
           - not_null
 
@@ -49,12 +61,14 @@ models:
         granularity: day
         dimension:
           type: time
+        data_type: date
         data_tests:
           - not_null
 
       - name: lifetime_transaction_count
         description: >
           Count of distinct invoices associated with the customer.
+        data_type: integer
         data_tests:
           - not_null
 
@@ -62,6 +76,7 @@ models:
         description: >
           Sum of signed_line_amount across the customer's transactions.
           Positive when purchases exceed returns/cancellations.
+        data_type: numeric
         data_tests:
           - not_null
 

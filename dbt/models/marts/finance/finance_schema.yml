@@ -17,12 +17,28 @@ models:
       materialized: incremental
       incremental_strategy: merge
       unique_key: transaction_line_id
+      
+      # added contract: {enforced: true} with explicit data_type definitions. 
+      #This guarantees BigQuery will fail the build rather than silently break Looker Studio 
+      #or downstream AI models if a column type or name ever shifts
+      contract:
+        enforced: true
 
     semantic_model:
       enabled: true
       name: Revenue_KPIs_semantic_layer
 
     agg_time_dimension: transaction_date
+
+
+    # Model-level Elementary Observability Tests 
+    data_tests:
+      - elementary.volume_anomalies:
+          timestamp_column: transaction_date
+          time_bucket:
+            period: day
+            count: 1
+      - elementary.schema_changes
 
       
     columns:
@@ -31,6 +47,7 @@ models:
         entity:
           type: primary
           name: transaction_line
+        data_type: string
         data_tests:
           - unique
           - not_null
@@ -43,6 +60,7 @@ models:
         entity:
           type: foreign
           name: invoice
+        data_type: string
         data_tests:
           - not_null
 
@@ -51,12 +69,14 @@ models:
         entity:
           type: foreign
           name: product
+        data_type: string
         data_tests:
           - not_null
 
       - name: transaction_date
         description: "Business date of the transaction."
         granularity: day
+        data_type: date
         dimension:
           type: time 
         data_tests:
@@ -68,11 +88,13 @@ models:
         entity:
           type: foreign
           name: customer
+        data_type: string
 
       - name: country
         description: "Standardized customer country."
         dimension:
           type: categorical
+        data_type: string
 
       - name: transaction_type
         description: >
@@ -80,6 +102,7 @@ models:
           sale, return, cancellation, or unknown.
         dimension:
           type: categorical
+        data_type: string
         data_tests:
           - not_null
           - accepted_values:
@@ -93,6 +116,8 @@ models:
           Recorded line value before applying return/cancellation direction. Filter to sales for gross sales.
           It preserves the value exactly as calculated from the source fields. 
           It does not yet decide whether the row should count positively or negatively in revenue.
+        
+        data_type: numeric
         data_tests:
           - not_null
 
@@ -102,6 +127,7 @@ models:
           Financial impact: positive for sales,
           negative for returns and cancellations.
           Summing this column yields net revenue.
+        data_type: numeric
         data_tests:
           - not_null
 

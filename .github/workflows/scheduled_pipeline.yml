@@ -1,0 +1,49 @@
+# .github/workflows/scheduled_pipeline.yml
+# GitHub Actions workflow so the pipeline can run automatically on a schedule 
+# or on-demand via the "Run workflow" button in GitHub whenever a new batch is dropped into retail-landing-zone
+name: Scheduled Production Data & AI Pipeline
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # Runs daily at 06:00 UTC
+  workflow_dispatch:   # Allows manual one-click execution in GitHub UI
+
+jobs:
+  run-end-to-end-pipeline:
+    name: Ingest -> dbt Contracts -> AI Reliability Gate
+    runs-on: ubuntu-latest
+    env:
+      GCP_PROJECT_ID: project-f5f18574-c0c4-44e2-b60
+      GOLD_DATASET: dbt_analytics26_finance
+      GCP_REGION: global
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 1. Run Idempotent GCS Ingestion + Pandera Gate
+        working-directory: ingestion
+        run: |
+          pip install -q pandas pyarrow pandera google-cloud-storage
+          python -m src.ingest_gcs
+
+      - name: 2. Run dbt Build & Contract Enforcement
+        working-directory: dbt
+        run: |
+          pip install -q dbt-bigquery elementary-data
+          dbt deps
+          dbt build
+
+      - name: 3. Run Live Vertex AI Briefing & Hallucination Gate
+        working-directory: ai-eval
+        run: |
+          pip install -q google-cloud-bigquery google-genai pydantic
+          python -m src.run_live_eval
