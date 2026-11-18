@@ -5,7 +5,7 @@ name: Scheduled Production Data & AI Pipeline
 
 on:
   schedule:
-    - cron: "0 6 * * *" # Runs daily at 06:00 UTC
+  #  - cron: "0 6 * * *" # Runs daily at 06:00 UTC
   workflow_dispatch:   # Allows manual one-click execution in GitHub UI
 
 jobs:
