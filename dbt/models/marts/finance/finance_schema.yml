@@ -35,10 +35,11 @@ models:
     # Model-level Elementary Observability Tests 
     data_tests:
       - elementary.volume_anomalies:
-          timestamp_column: transaction_date
-          time_bucket:
-            period: day
-            count: 1
+          arguments:
+            timestamp_column: transaction_date
+            time_bucket:
+              period: day
+              count: 1
       - elementary.schema_changes
 
       

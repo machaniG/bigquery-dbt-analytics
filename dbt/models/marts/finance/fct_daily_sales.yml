@@ -21,10 +21,11 @@ models:
     # add elementary anomaly detection tests for the metrics
     data_tests:
       - elementary.volume_anomalies:
-          timestamp_column: transaction_date
-          time_bucket:
-            period: day
-            count: 1
+          arguments:
+            timestamp_column: transaction_date
+            time_bucket:
+              period: day
+              count: 1
       - elementary.schema_changes
 
     # add semantic model definition for BI tools and AI consumption. 
