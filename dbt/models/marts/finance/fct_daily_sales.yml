@@ -36,18 +36,15 @@ models:
     
     agg_time_dimension: transaction_date
 
-
-    columns:
-      - name: transaction_line_id
-        description: "Deterministic surrogate key for one invoice-product line. unique identifier for one invoice-product line"
-        entity:
-          name: transaction_line
+    # Composite primary entity goes under derived_semantics
+    derived_semantics:
+      entities:
+        - name: daily_country_sales
           type: primary
-        data_type: string
-        data_tests:
-          - unique
-          - not_null
-          
+          expr: "concat(cast(transaction_date as string), '-', coalesce(country, 'unknown'))"
+
+
+    columns:               
       - name: transaction_date
         description: "Business date of the transactions."
         granularity: day
@@ -60,6 +57,8 @@ models:
       - name: country
         description: "Standardized customer country."
         data_type: string
+        dimension:
+          type: categorical
         data_tests:
           - not_null
 

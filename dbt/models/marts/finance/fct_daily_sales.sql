@@ -1,7 +1,6 @@
 with transaction_lines as (
     select
         transaction_date,
-        transaction_line_id,
         invoice_id,
         customer_id,
         country,
@@ -16,7 +15,6 @@ with transaction_lines as (
 )
 
 select
-    transaction_line_id,
     transaction_date,
     country,
 
@@ -68,6 +66,5 @@ select
 
 from transaction_lines
 group by
-    transaction_line_id,
     transaction_date,
     country
