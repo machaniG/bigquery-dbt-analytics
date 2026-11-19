@@ -17,6 +17,7 @@ models:
       materialized: incremental
       incremental_strategy: merge
       unique_key: transaction_line_id
+      on_schema_change: append_new_columns
       
       # added contract: {enforced: true} with explicit data_type definitions. 
       #This guarantees BigQuery will fail the build rather than silently break Looker Studio 
