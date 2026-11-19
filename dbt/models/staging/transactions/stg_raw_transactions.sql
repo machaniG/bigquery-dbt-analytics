@@ -31,10 +31,18 @@ classified as (
     select
         *,
         case
+            -- 1. Business meaning first: what the line IS
+            --    (accounting adjustments & non-product fees/carriage)
+            when upper(left(invoice_id, 1)) = 'A'
+                 or product_id in ('B', 'POST', 'M', 'DOT', 'AMAZONFEE', 'C2', 'BANK CHARGES')
+                then 'adjustment'
+
+            -- 2. Booking conventions second: how the line is RECORDED
             when upper(left(invoice_id, 1)) = 'C' then 'cancellation'
-            when upper(left(invoice_id, 1)) = 'A' or product_id in ('B', 'POST', 'M', 'DOT') then 'adjustment'
-            when quantity < 0 then 'return' 
-            when quantity > 0 AND unit_price > 0 then 'sale'
+            when quantity < 0 then 'return'
+
+            -- 3. Regular trade
+            when quantity > 0 and unit_price > 0 then 'sale'
             else 'unknown'
         end as transaction_type
     from renamed
