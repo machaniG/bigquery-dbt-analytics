@@ -51,4 +51,4 @@ models:
   # so Elementary stores its observability metadata tables inside a dedicated dbt_analytics26_elementary dataset in BigQuery
   elementary:
     +schema: elementary
-    materialized: table
+    +materialized: table

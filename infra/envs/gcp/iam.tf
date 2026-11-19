@@ -33,7 +33,7 @@ resource "google_project_iam_member" "bq_job_user" {
 resource "google_project_service" "vertex_ai" {
   project            = var.project_id
   service            = "aiplatform.googleapis.com"
-  disable_on_destroy = false # true so destroy actually turns off the API
+  disable_on_destroy = true # true so destroy actually turns off the API
 }
 
 # Grant Vertex AI User permission to the pipeline service account
