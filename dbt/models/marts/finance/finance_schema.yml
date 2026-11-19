@@ -28,10 +28,7 @@ models:
     semantic_model:
       enabled: true
       name: Revenue_KPIs_semantic_layer
-      primary_entity: revenue_kpis
-      description: >
-        Finance-grade transaction-line fact for revenue KPI tracking
-
+      
     agg_time_dimension: transaction_date
 
 
@@ -50,8 +47,8 @@ models:
       - name: transaction_line_id
         description: "Deterministic surrogate key for one invoice-product line. unique identifier for one invoice-product line"
         entity:
-          type: primary
           name: transaction_line
+          type: primary
         data_type: string
         data_tests:
           - unique

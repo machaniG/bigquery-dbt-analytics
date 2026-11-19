@@ -33,10 +33,7 @@ models:
     semantic_model:
       enabled: true
       name: daily_sales_semantic_model
-      primary_entity: daily_sales
-      description: >
-        Daily sales performance by transaction date and country.
-      
+    
     agg_time_dimension: transaction_date
 
 
@@ -47,6 +44,9 @@ models:
         data_type: date
         dimension:
           type: time
+        entity:
+          type: primary
+          name: transaction_date
         data_tests:
           - not_null
 
