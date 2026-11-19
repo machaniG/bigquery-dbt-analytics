@@ -28,6 +28,9 @@ models:
     semantic_model:
       enabled: true
       name: Revenue_KPIs_semantic_layer
+      primary_entity: revenue_kpis
+      description: >
+        Finance-grade transaction-line fact for revenue KPI tracking
 
     agg_time_dimension: transaction_date
 
