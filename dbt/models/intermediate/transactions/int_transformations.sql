@@ -3,7 +3,8 @@
 {{ config(
     materialized='incremental',
     incremental_strategy='merge',
-    unique_key='transaction_line_id'
+    unique_key='transaction_line_id',
+    on_schema_change='append_new_columns'
 ) }}
 
 with transaction_lines as (
