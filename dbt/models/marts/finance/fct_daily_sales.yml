@@ -38,15 +38,22 @@ models:
 
 
     columns:
+      - name: transaction_line_id
+        description: "Deterministic surrogate key for one invoice-product line. unique identifier for one invoice-product line"
+        entity:
+          name: transaction_line
+          type: primary
+        data_type: string
+        data_tests:
+          - unique
+          - not_null
+          
       - name: transaction_date
         description: "Business date of the transactions."
         granularity: day
         data_type: date
         dimension:
           type: time
-        entity:
-          type: primary
-          name: transaction_date
         data_tests:
           - not_null
 
