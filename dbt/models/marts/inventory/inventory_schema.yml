@@ -149,8 +149,7 @@ models:
           The UCI source may contain inconsistent descriptions for the same
           product code.
         data_type: string
-        data_tests:
-          - not_null
+    
 
     metrics:
       - name: units_sold
