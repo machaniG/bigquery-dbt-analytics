@@ -119,7 +119,7 @@ models:
           It preserves the value exactly as calculated from the source fields. 
           It does not yet decide whether the row should count positively or negatively in revenue.
         
-        data_type: numeric
+        data_type: numeric(38, 9)
         data_tests:
           - not_null
 
@@ -129,7 +129,7 @@ models:
           Financial impact: positive for sales,
           negative for returns and cancellations.
           Summing this column yields net revenue.
-        data_type: numeric
+        data_type: numeric(38, 9)
         data_tests:
           - not_null
 

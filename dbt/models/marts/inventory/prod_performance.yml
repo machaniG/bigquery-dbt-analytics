@@ -85,14 +85,14 @@ models:
       - name: gross_sales
         description: >
           Gross sales value before returns and cancellations.
-        data_type: numeric
+        data_type: numeric(38, 9)
         data_tests:
           - not_null
 
       - name: net_revenue
         description: >
           Net revenue after returns and cancellations.
-        data_type: numeric
+        data_type: numeric(38, 9)
         data_tests:
           - not_null
 
