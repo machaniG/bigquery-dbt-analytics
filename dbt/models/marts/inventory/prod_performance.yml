@@ -74,6 +74,13 @@ models:
         data_tests:
           - not_null
 
+      - name: cancelled_units
+        description: >
+          Total units cancelled, stored as a positive count.
+        data_type: integer
+        data_tests:
+          - not_null  
+
       - name: net_units_moved
         description: >
           Net units moved after returns and cancellations.
@@ -105,3 +112,27 @@ models:
           - not_null:
               config:
                 where: gross_units_sold > 0
+
+      - name: raw_return_rate
+        description: >
+          Returned units divided by gross units sold.
+          Null when the product has no recorded sales.
+        data_type: float
+        data_tests:
+          - not_null:
+              config:
+                where: gross_units_sold > 0
+
+      - name: first_transaction_date
+        description: >
+          Earliest transaction date for this product.
+        data_type: date
+        data_tests:
+          - not_null
+      
+      - name: last_transaction_date
+        description: >
+          Most recent transaction date for this product.
+        data_type: date
+        data_tests:
+          - not_null
