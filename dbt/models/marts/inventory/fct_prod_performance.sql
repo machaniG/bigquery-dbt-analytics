@@ -77,9 +77,12 @@ select
 
     -- Return rate: returned units divided by gross units sold.
     -- Use safe division to avoid errors when a product has no sales.
-    safe_divide(
-        returned_units,
-        gross_units_sold
+    COALESCE(
+        safe_divide(
+            returned_units,
+            gross_units_sold
+        ),
+        0.0
     ) as raw_return_rate,
 
     -- Cap it at 1.0 (100%) just in case returns exceed recorded sales

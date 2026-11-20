@@ -37,7 +37,6 @@ models:
     data_tests:
       - elementary.volume_anomalies:
           arguments:
-            timestamp_column: transaction_date
             time_bucket:
               period: day
               count: 1
