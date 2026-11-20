@@ -57,6 +57,8 @@ signed as (
         case
             when transaction_type in ('cancellation', 'return')
                 then -abs(gross_line_amount)
+            when transaction_type = 'adjustment'
+                then 0  -- Don't count accounting adjustments as revenue
             else gross_line_amount
         end as signed_line_amount,
 
