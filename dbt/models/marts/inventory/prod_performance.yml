@@ -100,4 +100,6 @@ models:
           Null when the product has no recorded sales.
         data_type: float
         data_tests:
-          - not_null
+          - not_null:
+              config:
+                where: gross_units_sold > 0
