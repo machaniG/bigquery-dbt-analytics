@@ -41,7 +41,8 @@ models:
               period: day
               count: 1
       - elementary.schema_changes:
-          severity: warn
+          config:
+            severity: warn
     
       
 
