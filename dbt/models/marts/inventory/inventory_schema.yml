@@ -123,6 +123,35 @@ models:
           type: categorical
         data_type: string
 
+      - name: gross_line_amount
+        description: >
+          Recorded line value before applying return/cancellation direction. Filter to sales for gross sales.
+          It preserves the value exactly as calculated from the source fields. 
+          It does not yet decide whether the row should count positively or negatively in revenue.
+        
+        data_type: numeric
+        data_tests:
+          - not_null
+
+      - name: signed_line_amount
+        description: >
+          Line value after applying negative sign for returns/cancellations. used for Net revenue, returns, cancellations
+          Financial impact: positive for sales,
+          negative for returns and cancellations.
+          Summing this column yields net revenue.
+        data_type: numeric
+        data_tests:
+          - not_null
+
+      - name: product_description
+        description: >
+          Most recent non-null product description observed in transactions.
+          The UCI source may contain inconsistent descriptions for the same
+          product code.
+        data_type: string
+        data_tests:
+          - not_null
+
     metrics:
       - name: units_sold
         label: Units Sold

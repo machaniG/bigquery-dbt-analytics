@@ -24,6 +24,7 @@ models:
       materialized: table
       incremental_strategy: merge
       unique_key: product_id
+      on_schema_change: append_new_columns
 
       # added contract: {enforced: true} with explicit data_type definitions. 
       #This guarantees BigQuery will fail the build rather than silently break Looker Studio 
@@ -44,8 +45,6 @@ models:
           config:
             severity: warn
     
-      
-
     columns:
       - name: product_id
         description: "Unique product identifier."
