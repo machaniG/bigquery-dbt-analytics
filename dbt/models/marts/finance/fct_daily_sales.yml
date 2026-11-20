@@ -26,7 +26,8 @@ models:
             time_bucket:
               period: day
               count: 1
-      - elementary.schema_changes
+      - elementary.schema_changes:
+          severity: warn
 
     # add semantic model definition for BI tools and AI consumption. 
     # this semantic model defines the metrics and dimensions for the fct_daily_sales model

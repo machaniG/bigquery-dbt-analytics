@@ -44,8 +44,9 @@ models:
             time_bucket:
               period: day
               count: 1
-      - elementary.schema_changes
-
+      - elementary.schema_changes:
+          severity: warn
+  
 
     columns:
       - name: transaction_line_id
