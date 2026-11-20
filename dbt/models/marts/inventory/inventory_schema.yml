@@ -17,6 +17,11 @@ models:
       incremental_strategy: merge
       unique_key: transaction_line_id
       on_schema_change: append_new_columns
+      #add partitioning to improve query performance and reduce cost for large tables
+      partition_by:
+        field: transaction_date
+        data_type: date
+        granuarity: day
 
       # added contract: {enforced: true} with explicit data_type definitions. 
       #This guarantees BigQuery will fail the build rather than silently break Looker Studio 
@@ -109,6 +114,12 @@ models:
         data_type: integer
         data_tests:
           - not_null
+
+      - name: country
+        description: "Customer or transaction country."
+        dimension:
+          type: categorical
+        data_type: string
 
     metrics:
       - name: units_sold

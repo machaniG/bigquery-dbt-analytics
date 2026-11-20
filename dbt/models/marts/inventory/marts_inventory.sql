@@ -10,8 +10,12 @@ select
     country,
     transaction_type,
     quantity,
-    signed_quantity,
-    gross_line_amount,
-    signed_line_amount,
-    product_description
+    signed_quantity
 from {{ ref('int_transformations') }}
+
+{% if is_incremental() %}
+where transaction_date >= (
+    select date_sub(max(transaction_date), interval 3 day)
+    from {{ this }}
+)
+{% endif %}
