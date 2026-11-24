@@ -55,7 +55,7 @@ I traced the issue to overlapping invoice classification rules: Amazon fee invoi
 
 - Executed a production full refresh and verified the corrected results.
 
-Read the detailed incident investigation ![here](https://github.com/machaniG/bigquery-dbt-analytics/blob/main/Ad-Hoc-analysis.pdf).
+Read the detailed incident investigation [here](https://github.com/machaniG/bigquery-dbt-analytics/blob/main/Ad-Hoc-analysis.pdf).
 
 
 ### **Validation**
@@ -69,12 +69,12 @@ Read the detailed incident investigation ![here](https://github.com/machaniG/big
 
 ### **Further Details**
 
-![Architecture and lineage](https://github.com/machaniG/bigquery-dbt-analytics/blob/main/assets/lineage-graph.png)
+[Architecture and lineage](https://github.com/machaniG/bigquery-dbt-analytics/blob/main/assets/lineage-graph.png)
 
-![Detailed incident investigation](https://github.com/machaniG/bigquery-dbt-analytics/blob/main/Ad-Hoc-analysis.pdf)
+[Detailed incident investigation](https://github.com/machaniG/bigquery-dbt-analytics/blob/main/Ad-Hoc-analysis.pdf)
 
-![Source code](https://github.com/machaniG/bigquery-dbt-analytics/tree/main/dbt)
+[Source code](https://github.com/machaniG/bigquery-dbt-analytics/tree/main/dbt)
 
-![Finance Revenue Tracking Dasboard](https://datastudio.google.com/s/tPn924FaW98)
+[Finance Revenue Tracking Dasboard](https://datastudio.google.com/s/tPn924FaW98)
 
 
