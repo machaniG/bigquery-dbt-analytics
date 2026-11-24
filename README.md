@@ -11,16 +11,16 @@ This project demonstrates real data platform development in GCP: infrastructure 
 
 Watch the end-to-end production pipeline:
 
-![Demo](assets/data-platform.mp4)
 
-![](https://github.com/user-attachments/assets/YOUR-VIDEO-ASSET-ID)
+https://github.com/user-attachments/assets/27f8d8f8-6b99-42bb-8737-4f6c629c6acd
+
 
 ---
+
 
 ## Architecture
 
 ![Data platform architecture](assets/architecture.png)
-
 ---
 
 ## Key Engineering Work
